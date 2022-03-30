@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
   // add useEffect code
+  useEffect(()=>{
+    if (timeRemaining === 0) {
+      onAnswered(false)
+      setTimeRemaining(10)
+      return 
+    }
+    const quizTimer = setInterval(() => {
+      setTimeRemaining(timeRemaining-1)
+    }, 1000);
+    return function cleanup() {
+      clearInterval(quizTimer)
+    }
+  }, [timeRemaining, onAnswered] );
 
   function handleAnswer(isCorrect) {
     setTimeRemaining(10);
@@ -24,7 +37,7 @@ function Question({ question, onAnswered }) {
           </button>
         );
       })}
-      <h5>{timeRemaining} seconds remaining</h5>
+      <h5>{timeRemaining.toString()} seconds remaining</h5>
     </>
   );
 }
